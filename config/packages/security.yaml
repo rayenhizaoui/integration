@@ -1,0 +1,32 @@
+security:
+    encoders:
+        App\Entity\User:
+            algorithm: auto
+
+    providers:
+        # Utilisation d'un fournisseur d'authentification basé sur la base de données
+        database_provider:
+            entity:
+                class: App\Entity\User
+                property: username
+
+    firewalls:
+        main:
+            anonymous: true
+            provider: database_provider
+            form_login:
+                login_path: app_login1
+                check_path: app_login1
+                default_target_path: app_show_users # Spécifie la route de pagination comme chemin par défaut après la connexion
+
+            logout:
+                path: app_logout
+                target: app_login1
+
+    access_control:
+        - { path: ^/login1, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register1, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/logout, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/showUsers/, roles: ADMIN }
+        - { path: ^/user/add/, roles: SPECTATEUR }
+
